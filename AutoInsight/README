@@ -1,0 +1,249 @@
+# AutoInsight — AI-Powered AutoML Agent
+
+**AutoInsight** is an intelligent, LLM-driven automated machine learning (AutoML) system that orchestrates the entire ML workflow—from data exploration to model training and reporting. It uses **LangGraph** for multi-agent orchestration and leverages large language models to make smart decisions at every stage.
+
+## 🚀 Features
+
+- **Intelligent Goal Parsing**: Automatically understands your data science objective and identifies the target variable, task type (classification/regression), and evaluation metrics
+- **Automated EDA**: Generates comprehensive exploratory data analysis with statistical summaries
+- **Smart Strategy Planning**: LLM-driven analysis recommending optimal cleaning and feature engineering steps
+- **Data Cleaning Pipeline**: Automated handling of missing values, outliers, and data inconsistencies
+- **Feature Engineering**: Intelligent feature creation and transformation
+- **Multi-Model Training**: Trains and evaluates multiple ML algorithms, selecting the best performer
+- **Automated Report Generation**: Creates detailed markdown reports with insights and results
+- **Flexible Data Loading**: Supports CSV, Excel, JSON, Parquet, URLs, and Google Sheets
+
+## 📋 Requirements
+
+- Python >= 3.11
+- Dependencies listed in `requirements.txt`
+
+## ⚙️ Installation
+
+```bash
+# Clone or navigate to the project directory
+cd "V2 AutoInsight"
+
+# Create and activate virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+## 🎯 Quick Start
+
+### Basic Usage
+
+```bash
+python main.py --csv data/database.csv --goal "Predict target variable" --output report.md
+```
+
+### Command-Line Arguments
+
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `--csv` | Path to local CSV file | - |
+| `--excel` | Path to local Excel file (.xls, .xlsx) | - |
+| `--json` | Path to local JSON file | - |
+| `--parquet` | Path to local Parquet file | - |
+| `--url` | URL to CSV file (HTTP/HTTPS) | - |
+| `--gsheet` | Google Sheets URL (public or with access) | - |
+| `--goal` | Data science objective/task description | - |
+| `--output` | Output markdown report filename | `report.md` |
+
+### Examples
+
+**Local CSV file:**
+```bash
+python main.py --csv data/housing.csv --goal "Predict house prices based on features" --output house_price_report.md
+```
+
+**From URL:**
+```bash
+python main.py --url https://example.com/data.csv --goal "Classify customer churn" --output churn_analysis.md
+```
+
+**Google Sheets:**
+```bash
+python main.py --gsheet "https://docs.google.com/spreadsheets/d/SHEET_ID/edit" --goal "Analyze sales trends" --output sales_report.md
+```
+
+## 📁 Project Structure
+
+```
+AutoInsight/
+├── main.py                    # Entry point and data loader
+├── pyproject.toml            # Project configuration
+├── requirements.txt          # Python dependencies
+├── README                    # This file
+├── report.md                 # Generated analysis report
+├── automl/
+│   ├── __init__.py
+│   ├── graph.py             # LangGraph workflow orchestration
+│   ├── state.py             # Shared state definition
+│   ├── llm.py               # LLM client setup
+│   ├── agents/              # AI agent implementations
+│   │   ├── goal_parser.py       # Parse user goals & identify task type
+│   │   ├── eda.py              # Exploratory data analysis
+│   │   ├── strategy.py          # Plan cleaning & feature steps
+│   │   ├── validator.py         # Data validation & type checking
+│   │   ├── cleaning.py          # Data cleaning operations
+│   │   ├── feature.py           # Feature engineering
+│   │   ├── modeling.py          # Train & evaluate models
+│   │   └── report.py            # Generate markdown reports
+│   └── tools/               # Utility functions for agents
+│       ├── profiling.py         # Data profiling & statistics
+│       ├── cleaning.py          # Cleaning helper functions
+│       ├── feature_engineering.py # Feature creation utilities
+│       └── modeling.py          # Model training & evaluation
+├── data/
+│   └── database.csv         # Sample dataset
+└── logs/                    # Execution logs (auto-generated)
+```
+
+## 🔧 How It Works
+
+The system orchestrates a 8-stage ML workflow using **LangGraph**:
+
+```
+Input Data + Goal
+      ↓
+[1] Goal Parser → Identify target, task type, metrics
+      ↓
+[2] EDA Agent → Generate statistical summaries
+      ↓
+[3] Strategy Agent → Plan cleaning & feature engineering
+      ↓
+[4] Validator → Validate data types & detect issues
+      ↓
+[5] Cleaning → Handle missing values, outliers, inconsistencies
+      ↓
+[6] Feature Engineering → Create new features & transformations
+      ↓
+[7] Modeling → Train multiple models & select best
+      ↓
+[8] Report → Generate comprehensive markdown report
+      ↓
+Output Report
+```
+
+### Agent Responsibilities
+
+| Agent | Function |
+|-------|----------|
+| **Goal Parser** | Parses user objective; identifies target column, task type (classification/regression), evaluation metric |
+| **EDA** | Computes descriptive statistics, distributions, correlations; detects data quality issues |
+| **Strategy** | LLM-driven planning of data cleaning and feature engineering steps |
+| **Validator** | Validates data types, checks for inconsistencies, identifies numeric-as-categorical columns |
+| **Cleaning** | Executes cleaning operations: handles missing values, outliers, normalization |
+| **Features** | Creates engineered features: interactions, polynomial features, encodings |
+| **Modeling** | Trains multiple ML models (regression/classification); evaluates and selects best performer |
+| **Report** | Generates detailed markdown report with findings, visualizations, and recommendations |
+
+## 📊 Output
+
+The system generates a **Markdown report** (`report.md` by default) containing:
+
+- Executive summary of the analysis
+- Data profiling and distribution analysis
+- Data quality issues identified
+- Executed cleaning and feature engineering steps
+- Model performance comparison
+- Feature importance analysis
+- Final recommendations
+- Complete model configuration and parameters
+
+## 🔌 Dependencies
+
+### Core Framework
+- **langgraph** >= 0.2 — Multi-agent orchestration
+- **python-dotenv** >= 1.0 — Environment configuration
+
+### Data & ML
+- **pandas** >= 2.0 — Data manipulation
+- **numpy** >= 1.26 — Numerical computations
+- **scikit-learn** >= 1.4 — ML algorithms
+- **kaggle** >= 1.6 — Kaggle dataset support
+- **datasets** >= 2.0 — Hugging Face datasets
+
+### LLM Integration
+- **ollama** >= 0.3 — Local LLM support
+- **groq** >= 1.1.2 — Groq API integration
+
+## 🔑 Configuration
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+# LLM Settings
+GROQ_API_KEY=your_groq_api_key
+OLLAMA_BASE_URL=http://localhost:11434  # For local Ollama
+
+# Optional: Kaggle credentials (for Kaggle datasets)
+KAGGLE_USERNAME=your_kaggle_username
+KAGGLE_KEY=your_kaggle_api_key
+```
+
+### LLM Models
+
+The system can use:
+- **Groq** (cloud-based, fast, requires API key)
+- **Ollama** (local, free, requires Ollama server running)
+
+## 🛠️ Development
+
+### Running Tests
+```bash
+pytest tests/
+```
+
+### Code Quality
+```bash
+ruff check .
+```
+
+### Project Structure
+The project uses:
+- **LangGraph** for workflow orchestration
+- **TypedDict** for type-safe state management
+- **Pandas/Scikit-learn** for data processing and ML
+- **Markdown** for report generation
+
+## 📝 Example Workflow
+
+```bash
+# 1. Prepare your data (CSV, Excel, etc.)
+# 2. Define your goal clearly
+python main.py \
+  --csv data/database.csv \
+  --goal "Predict customer lifetime value using purchase history and demographics" \
+  --output clv_analysis.md
+
+# 3. Review the generated report
+cat clv_analysis.md
+```
+
+## 🤝 Contributing
+
+Contributions welcome! Areas for enhancement:
+- Additional ML algorithms and ensembles
+- Advanced feature engineering techniques
+- Custom preprocessors and validators
+- Visualization enhancements
+- Performance optimization
+
+## 📄 License
+
+[Specify your license here]
+
+## 📧 Contact
+
+For questions or issues, please open an issue in the repository.
+
+---
+
+**Created with ❤️ for data scientists and ML practitioners**

@@ -1,0 +1,21 @@
+# Python
+AutoInsight/venv/
+AutoInsight/logs/
+AutoInsight/__pycache__/
+AutoInsight/**/__pycache__/
+AutoInsight/**/*.pyc
+AutoInsight/report.md
+AutoInsight/titanic_report.md
+
+# Backend
+autoinsight-ui/backend/uploads/
+autoinsight-ui/backend/reports/
+autoinsight-ui/backend/__pycache__/
+
+# Frontend
+autoinsight-ui/frontend/node_modules/
+
+# Secrets
+.env
+AutoInsight/.env
+autoinsight-ui/backend/.env

@@ -1,0 +1,10 @@
+# AutoInsight
+
+LLM-driven AutoML agentic system with a FastAPI + React interface.
+
+## Structure
+- `AutoInsight/` — core pipeline (LangGraph, agents, tools)
+- `autoinsight-ui/` — web interface (FastAPI backend + Vite/React frontend)
+
+## Setup
+See `AutoInsight/README` and `autoinsight-ui/README.md` for instructions.
