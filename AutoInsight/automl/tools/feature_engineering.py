@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Optional
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -51,21 +51,43 @@ def encode_categorical(
     if not cols:
         return df, "No categorical columns to encode."
 
-    if method in ("label", "ordinal"):
-        for col in cols:
+    # Hard rule: "sex" column must always be label-encoded.
+    sex_cols = [c for c in cols if _is_sex_col(c)]
+    other_cols = [c for c in cols if c not in sex_cols]
+
+    encoded_parts: list[str] = []
+    if sex_cols:
+        for col in sex_cols:
             df[col] = df[col].astype("category").cat.codes
-        return df, f"Label-encoded: {cols}."
+        encoded_parts.append(f"Label-encoded mandatory sex column(s): {sex_cols}.")
+
+    if method in ("label", "ordinal"):
+        for col in other_cols:
+            df[col] = df[col].astype("category").cat.codes
+        if other_cols:
+            encoded_parts.append(f"Label-encoded: {other_cols}.")
+        return df, " ".join(encoded_parts)
 
     if method == "onehot":
+        if not other_cols:
+            return df, " ".join(encoded_parts)
         before = set(df.columns)
-        df = pd.get_dummies(df, columns=cols, drop_first=True)
+        df = pd.get_dummies(df, columns=other_cols, drop_first=True)
         new_cols = list(set(df.columns) - before)
-        return df, f"One-hot encoded {cols} -> {len(new_cols)} new columns."
+        encoded_parts.append(f"One-hot encoded {other_cols} -> {len(new_cols)} new columns.")
+        return df, " ".join(encoded_parts)
 
     # Fallback
-    for col in cols:
+    for col in other_cols:
         df[col] = df[col].astype("category").cat.codes
-    return df, f"Label-encoded (fallback): {cols}."
+    if other_cols:
+        encoded_parts.append(f"Label-encoded (fallback): {other_cols}.")
+    return df, " ".join(encoded_parts)
+
+
+def _is_sex_col(col_name: str) -> bool:
+    normalized = re.sub(r"[^a-z0-9]", "", col_name.lower())
+    return normalized == "sex"
 
 
 # ---------------------------------------------------------------------------

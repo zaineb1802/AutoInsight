@@ -40,6 +40,10 @@ class AutoMLState(TypedDict, total=False):
     # ----- Modeling -----
     model_results: Optional[list[dict]]   # Per-model metrics
     best_model: Optional[dict]            # Best model info + params
+    best_model_path: Optional[str]        # Serialized best model .pkl path
+
+    # ----- Visualization -----
+    visualization_outputs: Optional[list[str]]  # Generated plot image paths
 
     # ----- Report -----
     report_path: Optional[str]       # Actual path where report was written

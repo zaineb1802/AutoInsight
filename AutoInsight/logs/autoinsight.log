@@ -512,3 +512,46 @@
 2026-04-11 13:18:13,064 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2026-04-11 13:18:13,072 [INFO] autoinsight.agents.report: Report written to: report.md
 2026-04-11 13:18:13,074 [INFO] autoinsight.main: [OK] AutoInsight complete. Report saved to: report.md
+2026-04-18 11:05:12,211 [INFO] autoinsight.main: Loading CSV: database.csv
+2026-04-18 11:05:12,221 [INFO] autoinsight.main: Dataset loaded — shape: (48, 11)
+2026-04-18 11:05:18,563 [INFO] autoinsight.llm: LLM backend: Groq (llama-3.3-70b-versatile)
+2026-04-18 11:05:19,608 [INFO] autoinsight.graph: LangGraph workflow compiled successfully.
+2026-04-18 11:05:19,621 [INFO] autoinsight.main: Starting AutoInsight workflow …
+2026-04-18 11:05:19,634 [INFO] autoinsight.agents.goal_parser: GoalParserAgent starting ...
+2026-04-18 11:05:20,022 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-18 11:05:20,044 [INFO] autoinsight.agents.goal_parser: Goal parsed — target: gold_price | task: regression | metric: rmse
+2026-04-18 11:05:20,044 [INFO] autoinsight.agents.eda: EDAAgent starting ...
+2026-04-18 11:05:20,472 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-18 11:05:20,485 [INFO] autoinsight.agents.eda: EDA complete — 48 rows × 11 cols | missing cells: 0
+2026-04-18 11:05:20,485 [INFO] autoinsight.agents.strategy: StrategyAgent starting ...
+2026-04-18 11:05:20,586 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-04-18 11:05:20,599 [INFO] groq._base_client: Retrying request to /openai/v1/chat/completions in 10.000000 seconds
+2026-04-18 11:05:31,546 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-18 11:05:31,546 [INFO] autoinsight.agents.strategy: Strategy planned — 1 cleaning steps, 4 feature steps
+2026-04-18 11:05:31,546 [INFO] autoinsight.agents.validator: ValidatorAgent starting ...
+2026-04-18 11:05:31,654 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-04-18 11:05:31,670 [INFO] groq._base_client: Retrying request to /openai/v1/chat/completions in 1.000000 seconds
+2026-04-18 11:05:33,120 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-18 11:05:33,130 [INFO] autoinsight.agents.validator: Validation complete — 1 issues | severity: warning | dropping: ['date']
+2026-04-18 11:05:33,130 [INFO] autoinsight.agents.validator: Dropped columns: ['date']
+2026-04-18 11:05:33,130 [INFO] autoinsight.agents.cleaning: CleaningAgent starting ...
+2026-04-18 11:05:33,136 [INFO] autoinsight.agents.cleaning: Cleaning complete — 2 steps executed. Final shape: (48, 10)
+2026-04-18 11:05:33,137 [INFO] autoinsight.agents.feature: FeatureAgent starting ...
+2026-04-18 11:05:33,142 [INFO] autoinsight.agents.feature: Feature engineering complete — 3 steps. Final shape: (48, 25)
+2026-04-18 11:05:33,142 [INFO] autoinsight.agents.modeling: ModelingAgent starting ...
+2026-04-18 11:05:33,148 [INFO] autoinsight.agents.modeling: Training on 48 samples × 24 features | task: regression | metric: rmse
+2026-04-18 11:05:34,152 [INFO] autoinsight.tools.modeling: Training LinearRegression …
+2026-04-18 11:05:39,815 [INFO] autoinsight.tools.modeling:   LinearRegression -> rmse: 131.5214
+2026-04-18 11:05:39,819 [INFO] autoinsight.tools.modeling: Training Ridge …
+2026-04-18 11:05:40,094 [INFO] autoinsight.tools.modeling:   Ridge -> rmse: 86.1949
+2026-04-18 11:05:40,094 [INFO] autoinsight.tools.modeling: Training RandomForestRegressor …
+2026-04-18 11:05:41,045 [INFO] autoinsight.tools.modeling:   RandomForestRegressor -> rmse: 84.4527
+2026-04-18 11:05:41,045 [INFO] autoinsight.tools.modeling: Training GradientBoostingRegressor …
+2026-04-18 11:05:41,389 [INFO] autoinsight.tools.modeling:   GradientBoostingRegressor -> rmse: 68.9460
+2026-04-18 11:05:41,389 [INFO] autoinsight.tools.modeling: Training SVR …
+2026-04-18 11:05:41,516 [INFO] autoinsight.tools.modeling:   SVR -> rmse: 127.2420
+2026-04-18 11:05:41,517 [INFO] autoinsight.agents.modeling: Best model: GradientBoostingRegressor (68.9460 rmse)
+2026-04-18 11:05:41,518 [INFO] autoinsight.agents.report: ReportAgent starting ...
+2026-04-18 11:05:42,543 [INFO] httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-18 11:05:42,543 [INFO] autoinsight.agents.report: Report written to: report.md
+2026-04-18 11:05:42,556 [INFO] autoinsight.main: [OK] AutoInsight complete. Report saved to: report.md

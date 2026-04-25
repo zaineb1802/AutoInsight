@@ -104,7 +104,7 @@ Frontend at **http://localhost:5173**
 
 1. **Upload** a CSV/Excel/JSON/Parquet file, or paste a URL/Google Sheets link
 2. **Describe** your ML goal in plain English
-3. **Choose** an LLM backend (Auto tries Groq → Ollama → Gemini)
+3. **Choose** an LLM backend (Auto tries Groq → Gemini)
 4. **Click Run** — the job starts in a background thread
 5. **Watch** the live log terminal and stage tracker update in real time via SSE
 6. **Review** the results dashboard (model scores, feature importance charts)

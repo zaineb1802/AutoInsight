@@ -18,7 +18,6 @@ class DataSource(str, Enum):
 class LLMBackend(str, Enum):
     AUTO = "auto"
     GROQ = "groq"
-    OLLAMA = "ollama"
     GEMINI = "gemini"
 
 
@@ -46,6 +45,8 @@ class ModelResult(BaseModel):
     model_name: str
     score: float
     train_score: float
+    r2_score: Optional[float] = None
+    r2_train_score: Optional[float] = None
 
 
 class JobResponse(BaseModel):
@@ -69,8 +70,11 @@ class JobResponse(BaseModel):
     model_results: list[ModelResult] = []
     best_model: Optional[str] = None
     best_score: Optional[float] = None
+    best_r2: Optional[float] = None
     feature_importance: dict[str, float] = {}
     report_path: Optional[str] = None
+    best_model_path: Optional[str] = None
+    visualization_outputs: list[str] = []
 
     # Error
     error: Optional[str] = None

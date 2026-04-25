@@ -8,7 +8,7 @@ import ReportViewer from './components/ReportViewer.jsx'
 import JobHistory from './components/JobHistory.jsx'
 import { runJob, getJob, listJobs, streamLogs } from './api.js'
 
-const LLM_OPTIONS = ['auto', 'groq', 'ollama', 'gemini']
+const LLM_OPTIONS = ['auto', 'groq', 'gemini']
 
 export default function App() {
   // Form state

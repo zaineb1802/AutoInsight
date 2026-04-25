@@ -1,16 +1,16 @@
 # 🤖 AutoInsight ML Report
 
-**Generated:** 2026-04-11 13:18:13  
-**Goal:** Predict survival  
-**Target Column:** `Survived`  
-**Task Type:** Classification  
-**Primary Metric:** F1
+**Generated:** 2026-04-18 11:05:42  
+**Goal:** predict gold price  
+**Target Column:** `gold_price`  
+**Task Type:** Regression  
+**Primary Metric:** RMSE
 
 ---
 
 ## 📋 Executive Summary
 
-The AutoML run aimed to predict survival with a classification task, targeting the 'Survived' column and optimizing for the f1 metric. The best-performing model was SVC, achieving a score of 0.8196. The key EDA findings highlighted issues with missing values in 'Age' and 'Cabin' columns, a survival rate of approximately 38%, and a mean passenger class of 2.31 with a standard deviation of 0.84. The results indicate that the models performed reasonably well, with the top four models being SVC, GradientBoostingClassifier, LogisticRegression, and RandomForestClassifier. Overall, the AutoML run provided valuable insights into the data and identified a suitable model for predicting survival.
+The AutoML run was conducted to predict gold prices using a regression task. The best performing model was the GradientBoostingRegressor with a root mean squared error (RMSE) of 68.946. The key findings from the exploratory data analysis (EDA) indicate that the data is clean, with no missing values, high cardinality columns, constant columns, or duplicate rows. The performance of the models varied, with GradientBoostingRegressor outperforming other models such as RandomForestRegressor, Ridge, SVR, and LinearRegression. The results suggest that the GradientBoostingRegressor is a suitable model for predicting gold prices. Overall, the AutoML run was successful in identifying a suitable model for the task at hand.
 
 ---
 
@@ -18,62 +18,58 @@ The AutoML run aimed to predict survival with a classification task, targeting t
 
 | Property | Value |
 |----------|-------|
-| Rows | 891 |
-| Columns | 12 |
-| Missing Cells | 866 |
+| Rows | 48 |
+| Columns | 11 |
+| Missing Cells | 0 |
 | Duplicate Rows | 0 |
-| Numeric Columns | 7 |
-| Categorical Columns | 5 |
+| Numeric Columns | 10 |
+| Categorical Columns | 1 |
 
 ---
 
 ## 🔬 EDA Key Findings
 
-- High percentage of missing values in 'Age' and 'Cabin' columns
-- Survival rate is approximately 38%
-- Passenger class has a mean of 2.31 and a standard deviation of 0.84
+- The data has no missing values
+- The data has no high cardinality columns
+- The data has no constant columns
+- The data has no duplicate rows
 
 ---
 
 ## [WARN] Validation Issues
 
-- Likely ID columns (dropped): ['PassengerId', 'Name']
-- High-cardinality string columns with no extractable structure (dropped): ['Ticket']
+- Likely ID columns (dropped): ['date']
 
 ---
 
 ## 🧹 Data Cleaning Steps
 
-- **handle_missing** on `['Age']` (method: median)
-- **handle_missing** on `['Cabin']` (method: drop_cols)
-- **handle_missing** on `['Embarked']` (method: mode)
-- **drop_constants** on `[]` (method: N/A)
-- **fix_dtypes** on `[]` (method: N/A)
+- **fix_dtypes** on `['date']` (method: N/A)
 
 ---
 
 ## 🛠️ Feature Engineering Steps
 
-- **encode_categorical** on `['Sex', 'Embarked']` (method: label)
-- **encode_categorical** on `['Pclass']` (method: ordinal)
-- **polynomial_features** on `['Age', 'Fare']` (method: 2)
-- **interaction_features** on `['Pclass', 'Sex']` (method: N/A)
-- **log_transform** on `['SibSp', 'Parch', 'Fare']` (method: N/A)
+- **encode_categorical** on `['date']` (method: label)
+- **log_transform** on `['global_demand', 'geopolitical_risk_index']` (method: N/A)
+- **polynomial_features** on `['crude_oil_price', 'usd_index', 'sp500', 'opec_output', 'us_rig_count', 'inflation_rate']` (method: 2)
+- **interaction_features** on `['crude_oil_price', 'usd_index', 'sp500', 'opec_output', 'us_rig_count', 'inflation_rate', 'global_demand', 'geopolitical_risk_index']` (method: N/A)
 
 ---
 
 ## 🏆 Model Performance
 
-**Best Model:** `SVC` — F1: **0.8196**
+**Best Model:** `GradientBoostingRegressor` — RMSE: **68.9460**
 
 ### All Models
 
 | Model | Test Score | Train Score |
 |-------|-----------|-------------|
-| SVC | 0.8196 | 0.8305 |
-| GradientBoostingClassifier | 0.8170 | 0.8106 |
-| LogisticRegression | 0.8049 | 0.819 |
-| RandomForestClassifier | 0.7946 | 0.8049 |
+| GradientBoostingRegressor | 68.9460 | 1.0848 |
+| RandomForestRegressor | 84.4527 | 23.644 |
+| Ridge | 86.1949 | 63.1921 |
+| SVR | 127.2420 | 123.7512 |
+| LinearRegression | 131.5214 | 25.6333 |
 
 ---
 
@@ -81,24 +77,24 @@ The AutoML run aimed to predict survival with a classification task, targeting t
 
 | Feature | Importance |
 |---------|----------|
-| Sex | 0.6348 |
-| Pclass | 0.0964 |
-| Age | 0.0642 |
-| SibSp | 0.0465 |
-| Parch | 0.0355 |
-| Embarked | 0.0304 |
-| FamilySize | 0.0254 |
-| Age_pow2 | 0.0152 |
-| Fare_pow2 | 0.0152 |
-| IsAlone | 0.0152 |
+| opec_output | 0.2200 |
+| opec_output_pow2 | 0.2023 |
+| sp500 | 0.1283 |
+| usd_index_x_opec_output | 0.0969 |
+| production_barrels | 0.0837 |
+| usd_index_x_us_rig_count | 0.0803 |
+| sp500_pow2 | 0.0383 |
+| crude_oil_price_x_geopolitical_risk_index | 0.0383 |
+| global_demand | 0.0320 |
+| crude_oil_price_x_inflation_rate | 0.0187 |
 
 ---
 
 ## 💡 Recommendations
 
-1. Impute missing values in 'Age' and 'Cabin' columns to improve model performance
-2. Consider feature engineering to extract more relevant information from the 'Passenger class' column
-3. Use the SVC model for predicting survival, but also consider ensemble methods to combine the predictions of the top-performing models
+1. Deploy the GradientBoostingRegressor model in a production-ready environment to predict gold prices
+2. Collect more data to further improve the performance of the model and reduce the RMSE
+3. Consider hyperparameter tuning for the GradientBoostingRegressor model to potentially improve its performance
 
 ---
 
@@ -106,24 +102,30 @@ The AutoML run aimed to predict survival with a classification task, targeting t
 
 ```json
 {
-  "C": 1.0,
-  "break_ties": false,
-  "cache_size": 200,
-  "class_weight": null,
-  "coef0": 0.0,
-  "decision_function_shape": "ovr",
-  "degree": 3,
-  "gamma": "scale",
-  "kernel": "rbf",
-  "max_iter": -1,
-  "probability": true,
+  "alpha": 0.9,
+  "ccp_alpha": 0.0,
+  "criterion": "friedman_mse",
+  "init": null,
+  "learning_rate": 0.1,
+  "loss": "squared_error",
+  "max_depth": 3,
+  "max_features": null,
+  "max_leaf_nodes": null,
+  "min_impurity_decrease": 0.0,
+  "min_samples_leaf": 1,
+  "min_samples_split": 2,
+  "min_weight_fraction_leaf": 0.0,
+  "n_estimators": 100,
+  "n_iter_no_change": null,
   "random_state": 42,
-  "shrinking": true,
-  "tol": 0.001,
-  "verbose": false
+  "subsample": 1.0,
+  "tol": 0.0001,
+  "validation_fraction": 0.1,
+  "verbose": 0,
+  "warm_start": false
 }
 ```
 
 ---
 
-*Report generated by [AutoInsight]*
+*Report generated by AutoInsight*

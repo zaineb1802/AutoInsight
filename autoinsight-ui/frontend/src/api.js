@@ -42,6 +42,10 @@ export async function getReport(jobId) {
   return r.json()
 }
 
+export function getModelDownloadUrl(jobId) {
+  return `${BASE}/jobs/${jobId}/model`
+}
+
 export function streamLogs(jobId, onLine, onDone) {
   const es = new EventSource(`${BASE}/jobs/${jobId}/logs`)
   es.onmessage = (e) => {

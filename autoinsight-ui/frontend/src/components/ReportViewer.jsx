@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { FileText, Download, Copy, Check } from 'lucide-react'
-import { getReport } from '../api.js'
+import { getModelDownloadUrl, getReport } from '../api.js'
 
 export default function ReportViewer({ jobId, status }) {
   const [markdown, setMarkdown] = useState(null)
@@ -51,6 +51,14 @@ export default function ReportViewer({ jobId, status }) {
             <Download size={13} />
             Download
           </button>
+          <a
+            style={{ ...styles.actionBtn, textDecoration: 'none' }}
+            href={getModelDownloadUrl(jobId)}
+            title="Download best model .pkl"
+          >
+            <Download size={13} />
+            Model PKL
+          </a>
         </div>
       </div>
 

@@ -12,6 +12,8 @@ Regression models:    LinearRegression, Ridge, RandomForestRegressor,
 from __future__ import annotations
 
 import logging
+import pickle
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -60,6 +62,23 @@ class ModelingAgent:
         )
 
         results, best = model_tools.train_and_evaluate(X, y, task_type, metric)
+        best_model_path = None
+
+        if best and best.get("_fitted_model") is not None:
+            try:
+                artifacts_dir = Path("artifacts")
+                artifacts_dir.mkdir(parents=True, exist_ok=True)
+                safe_name = str(best.get("model_name", "best_model")).replace(" ", "_")
+                best_model_path = artifacts_dir / f"{safe_name}_best.pkl"
+                with best_model_path.open("wb") as f:
+                    pickle.dump(best["_fitted_model"], f)
+                logger.info("Saved best model artifact to %s", best_model_path)
+                best["artifact_path"] = str(best_model_path)
+            except Exception as exc:
+                logger.warning("Failed to save best model artifact: %s", exc)
+
+        if best and "_fitted_model" in best:
+            best.pop("_fitted_model", None)
 
         if best:
             logger.info(
@@ -67,4 +86,9 @@ class ModelingAgent:
                 best["model_name"], best["score"], metric,
             )
 
-        return {**state, "model_results": results, "best_model": best}
+        return {
+            **state,
+            "model_results": results,
+            "best_model": best,
+            "best_model_path": str(best_model_path) if best_model_path else None,
+        }

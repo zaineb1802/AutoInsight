@@ -142,8 +142,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--llm",
         default="auto",
-        choices=["auto", "groq", "ollama", "gemini"],
-        help="LLM backend to use (default: auto — tries Groq then Ollama then Gemini)",
+        choices=["auto", "groq", "gemini"],
+        help="LLM backend to use (default: auto — tries Groq then Gemini)",
     )
     return parser
 
@@ -187,6 +187,8 @@ def main() -> None:
         "engineered_dataframe": None,
         "model_results": None,
         "best_model": None,
+        "best_model_path": None,
+        "visualization_outputs": [],
         "report_path": None,
         "messages": [],
     }

@@ -56,6 +56,7 @@ STAGE_ORDER = [
     "cleaning",
     "feature",
     "modeling",
+    "visualization",
     "report",
 ]
 
@@ -67,6 +68,7 @@ STAGE_LABELS = {
     "cleaning":    "Cleaning data",
     "feature":     "Engineering features",
     "modeling":    "Training models",
+    "visualization": "Generating visualizations",
     "report":      "Generating report",
 }
 
@@ -152,6 +154,10 @@ class JobRunner:
             if autoinsight_root not in sys.path:
                 sys.path.insert(0, autoinsight_root)
                 logger.info("Added to sys.path: %s", autoinsight_root)
+            os.environ.setdefault(
+                "AUTOINSIGHT_DOTENV",
+                str(Path(autoinsight_root) / ".env"),
+            )
 
             # ── Build and run LangGraph workflow ───────────────────────
             from automl.graph import build_graph
@@ -172,6 +178,8 @@ class JobRunner:
                 "engineered_dataframe": None,
                 "model_results": None,
                 "best_model": None,
+                "best_model_path": None,
+                "visualization_outputs": [],
                 "report_path": None,
                 "messages": [],
             }
@@ -190,6 +198,8 @@ class JobRunner:
                     model_name=r["model_name"],
                     score=r["score"],
                     train_score=r.get("train_score", 0.0),
+                    r2_score=r.get("r2_score"),
+                    r2_train_score=r.get("r2_train_score"),
                 )
                 for r in raw_results
             ]
@@ -197,7 +207,10 @@ class JobRunner:
             best = final_state.get("best_model") or {}
             job.best_model = best.get("model_name")
             job.best_score = best.get("score")
+            job.best_r2 = best.get("r2_score")
             job.feature_importance = best.get("feature_importance") or {}
+            job.best_model_path = final_state.get("best_model_path")
+            job.visualization_outputs = final_state.get("visualization_outputs") or []
 
             job.finished_at = time.time()
             job.elapsed_seconds = round(job.finished_at - job.created_at, 1)

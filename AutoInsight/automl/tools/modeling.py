@@ -167,12 +167,10 @@ def train_and_evaluate(
     best    : dict of the top model with feature_importance added
     """
     # Encode string targets for classification
-    le = None
     if task_type == "classification" and y.dtype == object:
-        le = LabelEncoder()
-        y = pd.Series(le.fit_transform(y), index=y.index)
+        y = pd.Series(LabelEncoder().fit_transform(y), index=y.index)
 
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train, _, y_train, _ = train_test_split(
         X, y, test_size=test_size, random_state=random_state,
         stratify=y if task_type == "classification" else None,
     )
@@ -194,6 +192,8 @@ def train_and_evaluate(
                 scoring=scoring, cv=cv, n_jobs=-1,
             )
             cv_score = _adjust_score(float(cv_scores.mean()), metric)
+            reg_r2_score = None
+            reg_r2_train = None
 
             model.fit(X_train, y_train)
 
@@ -207,9 +207,27 @@ def train_and_evaluate(
             else:
                 from sklearn.metrics import get_scorer
                 scorer = get_scorer(scoring)
-                train_score = _adjust_score(abs(scorer(model, X_train, y_train)), metric)
+                train_score = _adjust_score(float(scorer(model, X_train, y_train)), metric)
 
-            results.append({
+            # Always compute R2 for regression visibility, even if primary metric is RMSE/MAE/MAPE.
+            if task_type == "regression":
+                try:
+                    r2_cv_scores = cross_val_score(
+                        model, X_train, y_train, scoring="r2", cv=cv, n_jobs=-1,
+                    )
+                    reg_r2_score = float(r2_cv_scores.mean())
+                    if len(X_train) >= 100:
+                        r2_train_cv = cross_val_score(
+                            model, X_train, y_train, scoring="r2", cv=3, n_jobs=-1,
+                        )
+                        reg_r2_train = float(r2_train_cv.mean())
+                    else:
+                        from sklearn.metrics import r2_score
+                        reg_r2_train = float(r2_score(y_train, model.predict(X_train)))
+                except Exception as exc:
+                    logger.warning("Could not compute auxiliary R2 for %s: %s", name, exc)
+
+            row = {
                 "model_name": name,
                 "score": round(cv_score, 4),
                 "train_score": round(train_score, 4),
@@ -218,7 +236,13 @@ def train_and_evaluate(
                 "_feature_names": list(X.columns),
                 "_X_train": X_train,
                 "_y_train": y_train,
-            })
+            }
+            if task_type == "regression" and reg_r2_score is not None:
+                row["r2_score"] = round(reg_r2_score, 4)
+            if task_type == "regression" and reg_r2_train is not None:
+                row["r2_train_score"] = round(reg_r2_train, 4)
+
+            results.append(row)
             logger.info("  %s -> %s: %.4f", name, metric, cv_score)
 
         except Exception as exc:
@@ -244,7 +268,12 @@ def train_and_evaluate(
         "train_score": best_raw["train_score"],
         "params": best_raw["params"],
         "feature_importance": feat_importance,
+        "_fitted_model": best_raw["_fitted_model"],
     }
+    if "r2_score" in best_raw:
+        best["r2_score"] = best_raw["r2_score"]
+    if "r2_train_score" in best_raw:
+        best["r2_train_score"] = best_raw["r2_train_score"]
 
     # Strip internal keys before returning
     clean_results = [

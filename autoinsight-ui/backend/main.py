@@ -20,6 +20,7 @@ import os
 import sys
 import time
 import uuid
+from datetime import datetime
 from pathlib import Path
 from typing import AsyncGenerator
 
@@ -27,7 +28,7 @@ import pandas as pd
 import requests
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 
 from models import JobResponse, JobStatus, RunConfig
 from runner import JobRunner
@@ -118,7 +119,8 @@ def _load_preview(path: Path, suffix: str) -> pd.DataFrame:
 async def run_job(config: RunConfig) -> JobResponse:
     """Queue a new AutoML job and return its ID immediately."""
     job_id = str(uuid.uuid4())
-    report_path = str(REPORTS_DIR / f"{job_id}.md")
+    date_str = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+    report_path = str(REPORTS_DIR / f"AutoInsight Report - {date_str}.md")
 
     job = runner.submit(
         job_id=job_id,
@@ -167,6 +169,26 @@ async def get_report(job_id: str) -> dict:
     if not path.exists():
         raise HTTPException(status_code=404, detail="Report file missing")
     return {"markdown": path.read_text(encoding="utf-8"), "job_id": job_id}
+
+
+@app.get("/api/jobs/{job_id}/model")
+async def download_model(job_id: str) -> FileResponse:
+    """Download the best trained model artifact (.pkl)."""
+    job = runner.get(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if job.status != JobStatus.DONE:
+        raise HTTPException(status_code=202, detail="Model artifact not ready yet")
+
+    model_path = Path(job.best_model_path or "")
+    if not model_path.exists():
+        raise HTTPException(status_code=404, detail="Model artifact missing")
+
+    return FileResponse(
+        path=str(model_path),
+        filename=f"autoinsight-best-model-{job_id[:8]}.pkl",
+        media_type="application/octet-stream",
+    )
 
 
 # ---------------------------------------------------------------------------
