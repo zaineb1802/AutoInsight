@@ -210,7 +210,7 @@ class ReportAgent:
             else f"**Best Model:** `{best.get('model_name', 'N/A')}` — {metric.upper()}: **{best_primary}**"
         )
 
-        report = f"""# 🤖 AutoInsight ML Report
+        report = f"""# AutoInsight ML Report
 
 **Generated:** {now}  
 **Goal:** {goal}  

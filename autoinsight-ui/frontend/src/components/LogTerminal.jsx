@@ -102,9 +102,9 @@ const styles = {
     fontFamily: 'var(--font-mono)',
     fontSize: 11,
     lineHeight: 1.8,
-    background: '#06070a',
+    background: 'var(--terminal-bg)',
   },
   line: { display: 'flex', gap: 12, wordBreak: 'break-all' },
-  lineNum: { color: '#2a2d3a', minWidth: 36, userSelect: 'none', flexShrink: 0 },
+  lineNum: { color: 'var(--terminal-line)', minWidth: 36, userSelect: 'none', flexShrink: 0 },
   empty: { color: 'var(--text-muted)', fontStyle: 'italic' },
 }

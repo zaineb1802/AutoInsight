@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Play, RotateCcw, BrainCircuit } from 'lucide-react'
+import { Play, RotateCcw, BrainCircuit, Sun, Moon } from 'lucide-react'
 import DataSourcePanel from './components/DataSourcePanel.jsx'
 import LogTerminal from './components/LogTerminal.jsx'
 import StageProgress from './components/StageProgress.jsx'
@@ -11,6 +11,17 @@ import { runJob, getJob, listJobs, streamLogs } from './api.js'
 const LLM_OPTIONS = ['auto', 'groq', 'gemini']
 
 export default function App() {
+  // Theme state
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('theme')
+    return saved || 'dark'
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
   // Form state
   const [source, setSource] = useState(null)
   const [goal, setGoal] = useState('')
@@ -129,6 +140,9 @@ export default function App() {
           </div>
         </div>
         <div style={styles.headerRight}>
+          <button style={styles.themeBtn} onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
+            {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          </button>
           {activeJob && (
             <button style={styles.resetBtn} onClick={handleReset}>
               <RotateCcw size={13} /> New Run
@@ -280,6 +294,12 @@ const styles = {
     padding: '3px 8px', borderRadius: 4,
     background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.2)',
     color: 'var(--cyan)', fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
+  },
+  themeBtn: {
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    padding: '6px', borderRadius: 'var(--radius)',
+    background: 'var(--surface3)', border: '1px solid var(--border2)',
+    color: 'var(--text-dim)', cursor: 'pointer',
   },
 
   layout: { display: 'flex', flex: 1, overflow: 'hidden' },

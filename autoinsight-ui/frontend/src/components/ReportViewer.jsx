@@ -128,7 +128,7 @@ const styles = {
   th: { padding: '7px 12px', background: 'var(--surface3)', color: 'var(--cyan)', fontWeight: 700, textAlign: 'left', borderBottom: '1px solid var(--border)' },
   td: { padding: '6px 12px', color: 'var(--text-dim)', borderBottom: '1px solid var(--border)' },
   inlineCode: { fontFamily: 'var(--font-mono)', fontSize: 12, background: 'rgba(0,229,255,0.08)', color: 'var(--cyan)', padding: '1px 5px', borderRadius: 3 },
-  codeBlock: { background: '#06070a', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '14px 16px', fontSize: 11, color: 'var(--text-dim)', overflowX: 'auto', marginBottom: 16 },
+  codeBlock: { background: 'var(--terminal-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '14px 16px', fontSize: 11, color: 'var(--text-dim)', overflowX: 'auto', marginBottom: 16 },
   blockquote: { borderLeft: '3px solid var(--amber)', paddingLeft: 14, margin: '12px 0', color: 'var(--text-muted)', fontStyle: 'italic', fontSize: 13 },
   li: { fontSize: 13, color: 'var(--text-dim)', marginBottom: 4, lineHeight: 1.65 },
   strong: { color: 'var(--text)', fontWeight: 700 },

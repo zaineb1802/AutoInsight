@@ -8,18 +8,19 @@ const COLORS = ['#00e5ff', '#ffb300', '#00e676', '#d500f9', '#ff1744']
 export default function ResultsDashboard({ job }) {
   if (!job || job.status !== 'done') return null
 
-  const models = [...(job.model_results || [])].sort((a, b) => {
-    const isError = ['rmse', 'mae', 'mape'].includes(job.metric?.toLowerCase())
-    return isError ? a.score - b.score : b.score - a.score
-  })
+  const isRegression = job.task_type?.toLowerCase() === 'regression'
+  const isError = ['rmse', 'mae', 'mape'].includes(job.metric?.toLowerCase())
+
+  let models = [...(job.model_results || [])]
+  if (isRegression) {
+    models = models.map(m => ({ ...m, score: m.r2_score != null ? m.r2_score : m.score }))
+  }
+  models.sort((a, b) => isError ? a.score - b.score : b.score - a.score)
 
   const topFeatures = Object.entries(job.feature_importance || {})
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .map(([name, val]) => ({ name: name.length > 20 ? name.slice(0, 18) + '…' : name, value: val }))
-
-  const isError = ['rmse', 'mae', 'mape'].includes(job.metric?.toLowerCase())
-  const isRegression = job.task_type?.toLowerCase() === 'regression'
 
   return (
     <div style={styles.wrap}>
@@ -44,7 +45,7 @@ export default function ResultsDashboard({ job }) {
           <div style={styles.chartHeader}>
             <span style={styles.chartLabel}>MODEL COMPARISON</span>
             <span style={styles.metricBadge}>
-              {isRegression ? `${job.metric?.toUpperCase()} + R2` : job.metric?.toUpperCase()}
+              {isRegression ? 'R2' : job.metric?.toUpperCase()}
             </span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
@@ -64,11 +65,7 @@ export default function ResultsDashboard({ job }) {
                   fontFamily: 'Space Mono', fontSize: 11 }}
                 labelStyle={{ color: '#e8eaf0' }}
                 itemStyle={{ color: '#00e5ff' }}
-                formatter={(v, _name, item) => {
-                  const payload = item?.payload || {}
-                  const extra = isRegression && payload.r2_score != null ? ` | R2 ${payload.r2_score.toFixed(4)}` : ''
-                  return [`${v.toFixed(4)}${extra}`, job.metric?.toUpperCase()]
-                }}
+                formatter={(v) => [v.toFixed(4), isRegression ? 'R2' : job.metric?.toUpperCase()]}
               />
               <Bar dataKey="score" radius={[0, 4, 4, 0]} maxBarSize={22}>
                 {models.map((_, i) => (

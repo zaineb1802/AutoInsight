@@ -1,7 +1,11 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
 
 :root {
-  /* Core palette */
+  /* Core palette - Dark mode (default) */
   --bg:         #08090d;
   --surface:    #0f1117;
   --surface2:   #161820;
@@ -23,42 +27,128 @@
   --text-muted: #6b7280;
   --text-dim:   #9ca3af;
 
+  /* Terminal */
+  --terminal-bg: #06070a;
+  --terminal-line: #2a2d3a;
+
   /* Fonts */
   --font-display: 'Syne', sans-serif;
   --font-mono:    'Space Mono', monospace;
+  --font-weight:  400;
 
   /* Sizing */
   --radius:     6px;
   --radius-lg:  12px;
+
+  /* Font rendering for dark */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🌞 LIGHT MODE */
+[data-theme="light"] {
+  /* Softer backgrounds */
+  --bg:         #f4f5f7;
+  --surface:    #ffffff;
+  --surface2:   #f1f2f5;
+  --surface3:   #e7e9ee;
+
+  /* Borders */
+  --border:     #d6d9e0;
+  --border2:    #c2c6cf;
+
+  /* Text (no pure black) */
+  --text:       #1f2937;
+  --text-muted: #6b7280;
+  --text-dim:   #4b5563;
+
+  /* Terminal */
+  --terminal-bg: #eceef2;
+  --terminal-line: #cfd3dc;
+
+  /* Softer accents */
+  --cyan:       #0891b2;
+  --cyan-dim:   #0e7490;
+  --amber:      #d97706;
+  --amber-dim:  #b45309;
+
+  /* Slightly heavier text */
+  --font-weight: 450;
+
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-mono);
+  font-weight: var(--font-weight);
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--surface); }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--cyan-dim); }
+::-webkit-scrollbar-thumb { 
+  background: var(--border2); 
+  border-radius: 3px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+  background: var(--cyan-dim); 
+}
 
 /* Selection */
-::selection { background: var(--cyan); color: var(--bg); }
+::selection { 
+  background: var(--cyan); 
+  color: var(--bg); 
+}
+
+/* Softer selection in light mode */
+[data-theme="light"] ::selection {
+  background: #0891b233;
+  color: var(--text);
+}
 
 /* Utility */
 .sr-only {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip: rect(0,0,0,0); border: 0;
+  position: absolute; 
+  width: 1px; 
+  height: 1px;
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden;
+  clip: rect(0,0,0,0); 
+  border: 0;
 }
 
+/* Terminal / Logs / Code */
+.terminal, .log, pre, code {
+  background: var(--terminal-bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  border-radius: var(--radius);
+}
+
+/* Explicit tuning per mode */
+:root .terminal,
+:root .log,
+:root pre,
+:root code {
+  color: #e8eaf0;
+}
+
+[data-theme="light"] .terminal,
+[data-theme="light"] .log,
+[data-theme="light"] pre,
+[data-theme="light"] code {
+  color: #1f2937;
+}
+
+/* Animations */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
