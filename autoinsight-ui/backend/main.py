@@ -190,7 +190,6 @@ async def download_model(job_id: str) -> FileResponse:
         media_type="application/octet-stream",
     )
 
-
 # ---------------------------------------------------------------------------
 # SSE log stream
 # ---------------------------------------------------------------------------

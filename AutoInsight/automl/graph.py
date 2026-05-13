@@ -1,6 +1,8 @@
 """
+
 LangGraph workflow orchestration for AutoInsight.
 Wires up all 8 agents into a sequential StateGraph.
+
 """
 
 from __future__ import annotations
