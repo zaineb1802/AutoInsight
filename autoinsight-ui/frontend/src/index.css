@@ -45,32 +45,35 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 🌞 LIGHT MODE */
+/* 🌞 LIGHT MODE (IMPROVED) */
 [data-theme="light"] {
-  /* Softer backgrounds */
-  --bg:         #f4f5f7;
-  --surface:    #ffffff;
-  --surface2:   #f1f2f5;
-  --surface3:   #e7e9ee;
+  /* Softer backgrounds (no harsh white) */
+  --bg:         #fafbfc;
+  --surface:    #f5f7fb;
+  --surface2:   #e8ecf3;
+  --surface3:   #dce2ed;
 
   /* Borders */
-  --border:     #d6d9e0;
-  --border2:    #c2c6cf;
+  --border:     #c4cadb;
+  --border2:    #b4bace;
 
-  /* Text (no pure black) */
-  --text:       #1f2937;
-  --text-muted: #6b7280;
-  --text-dim:   #4b5563;
+  /* Text (stronger contrast) */
+  --text:       #0b0f14;
+  --text-muted: #4b5563;
+  --text-dim:   #6b7280;
 
-  /* Terminal */
-  --terminal-bg: #eceef2;
-  --terminal-line: #cfd3dc;
+  /* Terminal / logs (much clearer) */
+  --terminal-bg: #e9edf3;
+  --terminal-line: #cfd6e2;
 
-  /* Softer accents */
-  --cyan:       #0891b2;
-  --cyan-dim:   #0e7490;
-  --amber:      #d97706;
-  --amber-dim:  #b45309;
+  /* Accents tuned for light bg */
+  --cyan:       #075985;
+  --cyan-dim:   #0c4a6e;
+  --amber:      #b45309;
+  --amber-dim:  #92400e;
+  --green:      #047857;
+  --red:        #b91c1c;
+  --purple:     #7e22ce;
 
   /* Slightly heavier text */
   --font-weight: 450;
@@ -145,7 +148,14 @@ body {
 [data-theme="light"] .log,
 [data-theme="light"] pre,
 [data-theme="light"] code {
-  color: #1f2937;
+  background: #e5eaf2;   /* darker than page */
+  color: #0f172a;        /* stronger readability */
+  border: 1px solid var(--border);
+}
+
+/* Optional line separation inside logs */
+[data-theme="light"] .terminal-line {
+  border-bottom: 1px solid var(--terminal-line);
 }
 
 /* Animations */

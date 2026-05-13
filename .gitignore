@@ -1,15 +1,34 @@
-# Python
+# Python - Virtual Environments
+venv/
+.venv/
+env/
+ENV/
 AutoInsight/venv/
 AutoInsight/.venv/
-AutoInsight/logs/
-AutoInsight/__pycache__/
-AutoInsight/**/__pycache__/
-AutoInsight/**/*.pyc
-AutoInsight/report.md
-AutoInsight/titanic_report.md
+
+# Python - Cache & Compiled
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 *.egg-info/
+.eggs/
 dist/
 build/
+
+# Python - Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+
+# Project-specific Python Outputs
+AutoInsight/logs/
+AutoInsight/report.md
+AutoInsight/database.csv
 *.log
 
 # Backend
@@ -21,13 +40,28 @@ autoinsight-ui/backend/__pycache__/
 # Frontend
 autoinsight-ui/frontend/node_modules/
 autoinsight-ui/frontend/dist/
+autoinsight-ui/frontend/.turbo/
 
-# IDE & OS
+# IDE & Editors
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
 Thumbs.db
 
-# Secrets & Environment
+# Environment & Secrets
 .env
+.env.local
+.env.*.local
 AutoInsight/.env
 autoinsight-ui/backend/.env
+
+# OS & Temporary Files
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
